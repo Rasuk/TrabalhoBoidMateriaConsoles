@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 public class AgenteControlador : MonoBehaviour
 {
+    
     public GameObject agentePrefab;
     public List<GameObject> agentesPrefabs = new List<GameObject>();
     public int agenteCount = 100;
@@ -27,8 +29,10 @@ public class AgenteControlador : MonoBehaviour
     public float followWeight;
     public float maxSpeed;
     public float maxForce;
+    
     void Start()
     {
+        Profiler.BeginSample("Medição tempo Metodo Start");
         boidPositions = new Vector3[agenteCount];
         boidVelocities = new Vector3[agenteCount];
         for (int i = 0; i < agenteCount; i++)
@@ -48,10 +52,12 @@ public class AgenteControlador : MonoBehaviour
         velocityBuffer = new ComputeBuffer(agenteCount, sizeof(float) * 3);
         positionBuffer.SetData(boidPositions);
         velocityBuffer.SetData(boidVelocities);
+        Profiler.EndSample();
     }
 
     void Update()
     {
+        Profiler.BeginSample("Medição Update");
         if (agenteComputeShader != null)
         {
 
@@ -73,7 +79,7 @@ public class AgenteControlador : MonoBehaviour
             velocityBuffer.GetData(boidVelocities);
             for (int i = 0; i < agenteCount; i++)
             {
-                agentesPrefabs[i].transform.position = boidPositions[i];
+                agentesPrefabs[i].GetComponent<Transform>().position = boidPositions[i];
                 
             }
 
@@ -91,6 +97,8 @@ public class AgenteControlador : MonoBehaviour
 
             }
         }
+        Profiler.EndSample();
+        
     }
 
 

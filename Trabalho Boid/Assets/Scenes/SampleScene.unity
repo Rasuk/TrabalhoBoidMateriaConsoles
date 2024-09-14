@@ -407,7 +407,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agentePrefab: {fileID: 5650003613600637110, guid: b7f7d71d6a43c4c48b117183414d5c61, type: 3}
   agentesPrefabs: []
-  agenteCount: 100
+  agenteCount: 200
   spawnArea: {x: 100, y: 0, z: 100}
   agenteComputeShader: {fileID: 0}
   controlador: {fileID: 534721724}
@@ -513,7 +513,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agentePrefab: {fileID: 5650003613600637110, guid: b7f7d71d6a43c4c48b117183414d5c61, type: 3}
   agentesPrefabs: []
-  agenteCount: 100
+  agenteCount: 200
   spawnArea: {x: 100, y: 0, z: 100}
   agenteComputeShader: {fileID: 7200000, guid: 8e3eac1a50320a849993f0f08eff5aab, type: 3}
   controlador: {fileID: 1402162913}

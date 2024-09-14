@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Profiling;
 using static UnityEngine.GraphicsBuffer;
 
 public class Agente : MonoBehaviour
@@ -27,7 +28,7 @@ public class Agente : MonoBehaviour
     
     void Update()
     {
-        
+        Profiler.BeginSample("Medição Update Agente");
         Agente[] Agentes = FindObjectsOfType<Agente>();
         Vector3 separation = Separation(Agentes) * separationWeight;
         Vector3 alignment = Alignment(Agentes) * alignmentWeight;
@@ -37,7 +38,7 @@ public class Agente : MonoBehaviour
         velocity = Vector3.ClampMagnitude(velocity, maxSpeed);
         transform.position += velocity * Time.deltaTime;
         
-        
+        Profiler.EndSample();
     }
 
 
