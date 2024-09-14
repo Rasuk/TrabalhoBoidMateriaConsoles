@@ -78,7 +78,19 @@ public class AgenteControlador : MonoBehaviour
             }
 
         }
-        
+        else
+        {
+            for (int i = 0; i < agenteCount; i++)
+            {
+                agentesPrefabs[i].GetComponent<Agente>().cohesionWeight= cohesionWeight;
+                agentesPrefabs[i].GetComponent<Agente>().separationWeight= separationWeight;
+                agentesPrefabs[i].GetComponent<Agente>().alignmentWeight= alignmentWeight;
+                agentesPrefabs[i].GetComponent<Agente>().maxForce= maxForce;
+                agentesPrefabs[i].GetComponent<Agente>().neighborRadius= neighborRadius;
+                agentesPrefabs[i].GetComponent<Agente>().maxSpeed= maxSpeed;
+
+            }
+        }
     }
 
 
