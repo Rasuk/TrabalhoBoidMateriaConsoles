@@ -1,0 +1,24 @@
+#pragma kernel CSMain
+
+
+struct SphereData
+{
+    float3 position;
+    float distance;
+    float4 color;
+    
+};
+float deltaTime;
+RWStructuredBuffer<SphereData> sphereBuffer;
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+   
+    uint index = id.x;
+    float3 origin = float3(0.0, 0.0, 0.0);
+    float3 diff = sphereBuffer[index].position - origin;
+    sphereBuffer[index].distance = length(diff);
+    sphereBuffer[index].color = float4(frac(id.x * 0.1), frac(id.x * 0.3), frac(id.x * 0.5), 1.0);
+    sphereBuffer[index].position += 2 * deltaTime;
+
+}

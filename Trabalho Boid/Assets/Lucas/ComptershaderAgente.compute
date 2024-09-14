@@ -1,0 +1,79 @@
+
+#pragma kernel CSMain
+
+RWStructuredBuffer<float3>positions;
+RWStructuredBuffer<float3>velocities;
+int boidCount;
+
+float neighborRadius;
+float separationWeight;
+float aligmentWeight;
+float cohesionWeight;
+
+float maxSpeed;
+float maxForce;
+
+float3 controladorPos;
+float followWeight;
+
+[numthreads(256,1,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    if(id.x >= boidCount)
+        return;
+    
+    float3 myPosition = positions[id.x];
+    float3 myVelocity = velocities[id.x];
+    
+    float3 separationForce = float3(0, 0, 0);
+    float3 aligmentFurce = float3(0, 0, 0);
+    float3 cohesionForce = float3(0, 0, 0);
+    float3 followForce = float3(0, 0, 0);
+    int neighborCount = 0;
+    
+    for (uint i = 0; i < boidCount; i++)
+    {
+        if(i== id.x)
+            continue;
+        
+        float3 otherPosition = positions[i];
+        float3 otherVelocity = velocities[i];
+        float ditance = distance(myPosition, otherPosition);
+        
+        if(ditance < neighborRadius)
+        {
+            float3 direction = myPosition - otherPosition;
+            separationForce += direction / (ditance * ditance);
+            
+            aligmentFurce += otherVelocity;
+            
+            cohesionForce += otherPosition;
+            
+            neighborCount++;
+            
+        }
+        
+    }
+    if (neighborCount> 0)
+    {
+        separationForce = normalize(separationForce / neighborCount) * maxSpeed - myVelocity;
+        separationForce = clamp(separationForce, -maxForce, maxForce);
+        
+        aligmentFurce = normalize(aligmentFurce / neighborCount) * maxSpeed - myVelocity;
+        aligmentFurce = clamp(aligmentFurce, -maxForce, maxForce);
+        
+        cohesionForce = normalize((cohesionForce / neighborCount) - myPosition) * maxSpeed - myVelocity;
+        cohesionForce = clamp(cohesionForce, -maxForce, maxForce);
+    }
+    followForce = normalize(controladorPos - myPosition) * maxSpeed - myVelocity;
+    followForce = clamp(followForce, -maxForce, maxForce);
+    
+    myVelocity += (separationForce * separationWeight) + (aligmentFurce * aligmentWeight) + (cohesionForce * cohesionWeight) + (followForce * followWeight);
+
+    myVelocity = clamp(myVelocity, -maxSpeed, maxSpeed);
+    
+    myPosition += myVelocity * 0.01;
+    
+    positions[id.x] = myPosition;
+    velocities[id.x] = myVelocity;
+}
